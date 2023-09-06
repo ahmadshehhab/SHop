@@ -1,2 +1,2 @@
-# SHop
+# Shop
 Shop App
