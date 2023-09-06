@@ -1,0 +1,4 @@
+{
+    "jwtprivatekey":"",
+    "db":"mongodb://localhost/shop"
+}

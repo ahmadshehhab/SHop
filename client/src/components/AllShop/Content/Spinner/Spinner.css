@@ -1,0 +1,7 @@
+
+.spinner{
+  text-align: center;
+    opacity: 1;
+    z-index: 1000;
+    height: 50vh;
+}

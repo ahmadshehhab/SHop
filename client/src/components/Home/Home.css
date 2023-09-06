@@ -1,0 +1,23 @@
+.container {
+    background-color: rgb(31, 30, 30);
+    width: 100%;
+    height: 100vh;
+    color:white;
+}
+
+.product-container {
+    background-color:  rgb(31, 30, 30);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.title{
+
+}
+img{
+    width: 100%;
+}
+.row1{
+    height: 60vh;
+}
