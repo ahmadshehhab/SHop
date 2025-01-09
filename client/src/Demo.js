@@ -11,12 +11,13 @@ import Contact from './components/Contact/Contact';
 import Shop from './components/Shop/Shop'
 import Auth from './components/Auth/Auth';
 import Login from './components/Login/Login';
+import Confirm from './components/confirm/Confirm';
+import Profile from './components/profile/Profile.jsx';
 
 function Demo() {
     return(
     <>
     <TopNav/>
-    
    <Routes>
    <Route exact path='/' element={
      <>
@@ -40,17 +41,24 @@ function Demo() {
      <Footer/>
      </>
 } /> 
-<Route path='/home/shop' element={
+<Route path='/home/workers-post' element={
      <>
      <Nav/>
      <AllShop/>
      <Footer/>
      </>
 } /> 
-<Route path='/home/details' element={
+<Route path='/home/details/:id' element={
      <>
      <Nav/>
      <Shop/>
+     <Footer/>
+     </>
+} /> 
+<Route path='/home/profile' element={
+     <>
+     <Nav/>
+     <Profile/>
      <Footer/>
      </>
 } /> 
@@ -64,6 +72,11 @@ function Demo() {
 <Route exact path='/home/register' element={
      <>
      <Auth/>
+     </>
+} /> 
+<Route exact path='/home/register/confirm' element={
+     <>
+     <Confirm/>
      </>
 } /> 
 <Route exact path='/home/login' element={

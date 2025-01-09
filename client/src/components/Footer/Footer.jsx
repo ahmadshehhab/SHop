@@ -8,7 +8,8 @@ const Footer = () => {
             <div className="row">
 
                 <div className="col-md-4 pt-5">
-                    <h2 className="h2 text-success border-bottom pb-3 border-light logo">SHHAB Shop</h2>
+                    <h2 className="h2 text-success border-bottom pb-3 border-light logo">Professionals
+                    </h2>
                     <ul className="list-unstyled text-light footer-link-list">
                         <li>
                             <i className="fa fa-map-marker fa-fw"></i>
@@ -25,29 +26,8 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                <div className="col-md-4 pt-5">
-                    <h2 className="h2 text-light border-bottom pb-3 border-light">Products</h2>
-                    <ul className="list-unstyled text-light footer-link-list">
-                        <li><a className="text-decoration-none" href="#">Luxury</a></li>
-                        <li><a className="text-decoration-none" href="#">Sport Wear</a></li>
-                        <li><a className="text-decoration-none" href="#">Men's Shoes</a></li>
-                        <li><a className="text-decoration-none" href="#">Women's Shoes</a></li>
-                        <li><a className="text-decoration-none" href="#">Popular Dress</a></li>
-                        <li><a className="text-decoration-none" href="#">Gym Accessories</a></li>
-                        <li><a className="text-decoration-none" href="#">Sport Shoes</a></li>
-                    </ul>
-                </div>
+            
 
-                <div className="col-md-4 pt-5">
-                    <h2 className="h2 text-light border-bottom pb-3 border-light">Further Info</h2>
-                    <ul className="list-unstyled text-light footer-link-list">
-                        <li><a className="text-decoration-none" href="#">Home</a></li>
-                        <li><a className="text-decoration-none" href="#">About Us</a></li>
-                        <li><a className="text-decoration-none" href="#">Shop Locations</a></li>
-                        <li><a className="text-decoration-none" href="#">FAQs</a></li>
-                        <li><a className="text-decoration-none" href="#">Contact</a></li>
-                    </ul>
-                </div>
 
             </div>
 
@@ -72,10 +52,10 @@ const Footer = () => {
                     </ul>
                 </div>
                 <div className="col-auto ">
-                    <label className="sr-only" htmlFor= "subscribeEmail">Email address</label>
+                    <label className="sr-only" htmlFor= "subscribeEmail">d</label>
                     <div className="input-group mb-2">
-                        <input type="text" className="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address" />
-                        <div className="input-group-text btn-success text-light">Subscribe</div>
+                        <input type="text" className="form-control bg-dark border-light" id="subscribeEmail" placeholder=" 🤍اكتب ملاحظتك لتطوير الموقع" />
+                        <div className="input-group-text btn-success text-light">send</div>
                     </div>
                 </div>
             </div>
@@ -86,8 +66,7 @@ const Footer = () => {
                 <div className="row pt-2">
                     <div className="col-12">
                         <p className="text-left text-light">
-                            Copyright &copy; 2022 SHHAB 
-                            | Designed by Ahmed Shehab
+                            | 2024
                         </p>
                     </div>
                 </div>

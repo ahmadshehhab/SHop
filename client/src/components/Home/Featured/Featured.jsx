@@ -1,27 +1,71 @@
 import React from 'react'
+import { useState,useEffect} from 'react'
 import './Featured.css'
-import f1 from '../../../assets/img/feature_prod_01.jpg'
-import f2 from '../../../assets/img/feature_prod_02.jpg'
-import f3 from '../../../assets/img/feature_prod_03.jpg'
+import axios from "axios"
+import { Link, useNavigate } from "react-router-dom";
 const Featured = () => {
+    const token = JSON.parse(localStorage.getItem("login")).token;
+    const submitPost = async (id) => {
+        const headers = {
+          Authorization: `Bearer ${token}`, 
+          "Content-Type": "multipart/form-data",
+        };
+      
+        try {
+          await axios.patch(
+            `https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/${id}/`,
+            {},
+            { headers } 
+          ).then(console.log("accepted"));
+        } catch (err) {
+          const errorMessage = err.response?.data
+            ? err.response.data[Object.keys(err.response.data)[0]][0]
+            : "An unknown error occurred.";
+          setError(errorMessage);
+          console.error(err.response?.data || err);
+        }
+      };
+    const [error, setError] = useState('')
+    const [data, setData] = useState([])
+    let d = []
+    const getPosts = async () => {
+		const headers = {
+			'Content-Type': 'application/json'
+		};
+       await axios.get('https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?notAccepted=1',{headers}).then(res => {
+        
+        setData(res.data)
+        console.log(res.data)
+       }).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
+    }
+ useEffect(() => {
+    getPosts().then(console.log(d))
+ 
+   
+ }, [])
+
   return (
     <>
     <section className="bg-light">
         <div className="container-sm py-5">
             <div className="row text-center py-3">
                 <div className="col-lg-6 m-auto">
-                    <h1 className="h1">Featured Product</h1>
+                    <h1 className="h1">All Posts</h1>
                     <p>
-                        Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident.
+                        
                     </p>
+                    <div className="text-danger">
+  {error }
+</div>
                 </div>
             </div>
             <div className="row">
-                <div className="col-12 col-md-4 mb-4">
+                {data.map(e => (<>
+                    <div className="col-12 col-md-4 mb-4">
                     <div className="card h-100">
+                <Link to={`/home/details/${e.id}`}>
                         <a href="shop-single.html">
-                            <img src={f1} className="card-img-top" alt="..." />
+                            <img src={e.image} className="card-img-top prof-post-image" alt="..." />
                         </a>
                         <div className="card-body">
                             <ul className="list-unstyled d-flex justify-content-between">
@@ -32,64 +76,29 @@ const Featured = () => {
                                     <i className="text-muted fa fa-star"></i>
                                     <i className="text-muted fa fa-star"></i>
                                 </li>
-                                <li className="text-muted text-right">$240.00</li>
+                                <li className="text-muted text-right">السعر: {e.price}</li>
                             </ul>
-                            <a href="shop-single.html" className="h2 text-decoration-none text-dark">Gym Weight</a>
-                            <p className="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.
+                            <a href="shop-single.html" className="h2 text-decoration-none text-dark">{e.title}</a>
+                            <p className="card-text prof-desc">
+                               {e.description}
                             </p>
-                            <p className="text-muted">Reviews (24)</p>
+                           
                         </div>
+                       
+                </Link>
+                {localStorage.getItem("user_type") == "worker" && (<>
+                            <button type='button' className="btn btn-success " onClick={() => submitPost(e.id)}>Apply </button>
+                            <div className="text-danger">
+  {error }
+</div>
+                            </>)}
                     </div>
+                
                 </div>
-                <div className="col-12 col-md-4 mb-4">
-                    <div className="card h-100">
-                        <a href="shop-single.html">
-                            <img src={f2} className="card-img-top" alt="..." />
-                        </a>
-                        <div className="card-body">
-                            <ul className="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i className="text-warning fa fa-star"></i>
-                                    <i className="text-warning fa fa-star"></i>
-                                    <i className="text-warning fa fa-star"></i>
-                                    <i className="text-muted fa fa-star"></i>
-                                    <i className="text-muted fa fa-star"></i>
-                                </li>
-                                <li className="text-muted text-right">$480.00</li>
-                            </ul>
-                            <a href="shop-single.html" className="h2 text-decoration-none text-dark">Cloud Nike Shoes</a>
-                            <p className="card-text">
-                                Aenean gravida dignissim finibus. Nullam ipsum diam, posuere vitae pharetra sed, commodo ullamcorper.
-                            </p>
-                            <p className="text-muted">Reviews (48)</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 mb-4">
-                    <div className="card h-100">
-                        <a href="shop-single.html">
-                            <img src={f3} className="card-img-top" alt="..." />
-                        </a>
-                        <div className="card-body">
-                            <ul className="list-unstyled d-flex justify-content-between">
-                                <li>
-                                    <i className="text-warning fa fa-star"></i>
-                                    <i className="text-warning fa fa-star"></i>
-                                    <i className="text-warning fa fa-star"></i>
-                                    <i className="text-warning fa fa-star"></i>
-                                    <i className="text-warning fa fa-star"></i>
-                                </li>
-                                <li className="text-muted text-right">$360.00</li>
-                            </ul>
-                            <a href="shop-single.html" className="h2 text-decoration-none text-dark">Summer Addides Shoes</a>
-                            <p className="card-text">
-                                Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et scelerisque ipsum lobortis nec.
-                            </p>
-                            <p className="text-muted">Reviews (74)</p>
-                        </div>
-                    </div>
-                </div>
+                </>))}
+                
+               
+                
             </div>
         </div>
     </section>

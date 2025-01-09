@@ -1,6 +1,34 @@
 import React from 'react'
-
+import axios from "axios"
+import { useEffect, useState } from "react";
 const Contact = () => {
+     const [error, setError] = useState("");
+     const [subject, setSubject] = useState("");
+     const [message, setMessage] = useState("");
+    const sendMessage = async () => {
+        const formData = new FormData();
+        formData.append("subject", subject);
+        formData.append("message", message);
+        formData.append("recipient", "ahmadshehab11177@gmail.com");
+    
+        try {
+          
+          const response = await axios.post(
+            "https://ahmadshehab19951995.pythonanywhere.com/prof/send-email/",
+            formData,
+            {
+              headers: {
+               
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          ).then(res => setError('sent')).catch((err) =>{ setError(err.response.data[Object.keys(err.response.data)[0]][0]); });
+          console.log(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
   return (
     <>
     <div className="container-fluid bg-light py-5">
@@ -13,53 +41,29 @@ const Contact = () => {
         </div>
     </div>
 
-   {/*  <div id="mapid" style="width: 100%; height: 300px;"></div>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-    <script>
-        var mymap = L.map('mapid').setView([-23.013104, -43.394365, 13], 13);
 
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-            maxZoom: 18,
-            attribution: 'Zay Telmplte | Template Design by <a href="https://templatemo.com/">Templatemo</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1
-        }).addTo(mymap);
-
-        L.marker([-23.013104, -43.394365, 13]).addTo(mymap)
-            .bindPopup("<b>Zay</b> eCommerce Template<br />Location.").openPopup();
-
-        mymap.scrollWheelZoom.disable();
-        mymap.touchZoom.disable();
-    </script> */}
  
     <div className="container-sm py-5">
         <div className="row py-5">
             <form className="col-md-9 m-auto" method="post" role="form">
                 <div className="row">
-                    <div className="form-group col-md-6 mb-3">
-                        <label htmlFor= "inputname">Name</label>
-                        <input type="text" className="form-control mt-1" id="name" name="name" placeholder="Name" />
-                    </div>
-                    <div className="form-group col-md-6 mb-3">
-                        <label htmlFor= "inputemail">Email</label>
-                        <input type="email" className="form-control mt-1" id="email" name="email" placeholder="Email" />
-                    </div>
+                    
                 </div>
                 <div className="mb-3">
                     <label htmlFor= "inputsubject">Subject</label>
-                    <input type="text" className="form-control mt-1" id="subject" name="subject" placeholder="Subject" />
+                    <input type="text" className="form-control mt-1" id="subject" name="subject" placeholder="Subject" onChange={e => setSubject(e.target.value)} />
                 </div>
                 <div className="mb-3">
                     <label htmlFor= "inputmessage">Message</label>
-                    <textarea className="form-control mt-1" id="message" name="message" placeholder="Message" rows="8"></textarea>
+                    <textarea className="form-control mt-1" id="message" name="message" placeholder="Message" rows="8" onChange={e => setMessage(e.target.value)}></textarea>
                 </div>
                 <div className="row">
                     <div className="col text-end mt-2">
-                        <button type="submit" className="btn btn-success btn-lg px-3">Let’s Talk</button>
+                        <button type="button" onClick={sendMessage} className="btn btn-success btn-lg px-3">send</button>
                     </div>
+                    <div className="text-danger">
+  {error }
+</div>
                 </div>
             </form>
         </div>

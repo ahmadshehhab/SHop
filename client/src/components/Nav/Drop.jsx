@@ -4,9 +4,14 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import './Nav.css'
 import { Link , useNavigate } from 'react-router-dom';
-
+import { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
+import axios from "axios"
 export default function BasicMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [count, setcount] = useState('');
+  const token = JSON.parse(localStorage.getItem("login")).token;
+  const decoded = jwt_decode(token);
   const open = Boolean(anchorEl);
   const navigate = useNavigate()
   const handleClick = (event) => {
@@ -17,11 +22,26 @@ export default function BasicMenu() {
   };
   const deleteToken = () => {
     localStorage.removeItem('login')
+    localStorage.removeItem('user_type')
+    localStorage.removeItem('username')
+
   }
   const login = () => {
     navigate('/home/login')
   }
-
+  const getcount = async () => {
+    if(localStorage.getItem('user_type') == 'homeowner'){
+     try {
+      await axios.get(`https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?user=${decoded.user_id}`).then(res => setcount(res.data.length))
+     } catch (error) {
+      
+     }
+    }
+  }
+   useEffect(() => {
+     getcount();
+   }, []);
+ 
   return (
     <>
        {JSON.parse(localStorage.getItem('login')) ?
@@ -37,7 +57,7 @@ export default function BasicMenu() {
         <div className="con">
         <i className="fa fa-fw fa-user text-dark mr-3"></i>
 
-        <span className="position-absolute top-0 left-100 right-0 translate-middle badge rounded-pill bg-light text-dark">+99</span>
+        <span className="position-absolute top-0 left-100 right-0 translate-middle badge rounded-pill bg-light text-dark">{count || ' '}</span>
         </div>
       </Button>
       <Menu
@@ -49,9 +69,7 @@ export default function BasicMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
-      
+        <MenuItem onClick={handleClose}><Link to="/home/profile">Profile</Link></MenuItem>
         <MenuItem onClick={handleClose}><Link to="/home/login" onClick={deleteToken}>Logout</Link></MenuItem>
       </Menu>
     </div>

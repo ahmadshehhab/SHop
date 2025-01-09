@@ -2,6 +2,7 @@ import React, { useState,useEffect} from 'react'
 import './Login.css'
 import axios from 'axios'
 import { json, Link, useNavigate } from 'react-router-dom'
+import jwt_decode from "jwt-decode";
 const Login = () => {
     const container = document.getElementById('container')
 	const [username,setUsername] = useState('')
@@ -23,14 +24,31 @@ const Login = () => {
 		const headers = {
 			'Content-Type': 'application/json'
 		};
-       await axios.post('http://localhost:3001/login', {
-			email:email,
+       await axios.post('https://ahmadshehab19951995.pythonanywhere.com/prof/api/login/', {
+				username:username,
 			password:password
-	},{headers}).then(res => {localStorage.setItem('login',JSON.stringify({login:true,token:res.data.token}))}).then(() => navigate('/home')).catch(err => setError(err.response.data))
+	},{headers}).then(async res => {
+		localStorage.setItem('login',JSON.stringify({login:true,token:res.data.access}))
+		const token = JSON.parse(localStorage.getItem("login")).token;
+    const decoded = jwt_decode(token);
+    console.log(decoded)
+    try {
+      const response = await axios.get(
+        `https://ahmadshehab19951995.pythonanywhere.com/prof/users/${decoded.user_id}/`
+      ).then(res => {
+       
+        localStorage.setItem("username", res.data.username);
+        localStorage.setItem("user_type", res.data.user_type);
+      })
+    } catch (error) {
+      console.error(error);
+    }
+
+	}).then(() => navigate('/home')).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
 	//await axios.get('http://localhost:3001/products').then(data => console.log(data))
         
     }
-	
+	/*  */
 
   return (
     <>
@@ -44,6 +62,10 @@ const Login = () => {
 						<div className="input-group">
 							<i className='bx bxs-user'></i>
 							<input type="text" placeholder="Username" name='username' onChange={(e) => setUsername(e.target.value)}/>
+						</div>
+						<div className="input-group">
+							<i className='bx bx-mail-send'></i>
+							<input type="email" placeholder="Email" name='email' />
 						</div>
 						<div className="input-group">
 							<i className='bx bx-mail-send'></i>
@@ -79,15 +101,19 @@ const Login = () => {
 					<div className="form sign-in">
 						<div className="input-group">
 							<i className='bx bxs-user'></i>
-							<input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)}/>
+							<input type="text" placeholder="username" onChange={(e) => setUsername(e.target.value)}/>
 						</div>
 						<div className="input-group">
 							<i className='bx bxs-lock-alt'></i>
 							<input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
 						</div>
+						
 						<button onClick={LoginUser}>
 							Sign in
 						</button>
+						<div className="text-danger">
+  {error }
+</div>
 						<p>
 							<b>
 								Forgot password?
