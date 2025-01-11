@@ -12,16 +12,32 @@ const Auth = () => {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [address, setAddress] = useState("");
+  const [types, setTypes] = useState([])
+  const [cities, setCities] = useState([])
   const navigate = useNavigate();
 
-  const sin = () => {
-    container.classList.add("sign-in");
-    container.classList.remove("sign-up");
-  };
-  const sout = () => {
-    container.classList.add("sign-up");
-    container.classList.remove("sign-in");
-  };
+  const getTypesAndCitys = async () => {
+    const headers = {
+			'Content-Type': 'application/json'
+		};
+    try {
+      await axios.get('https://ahmadshehab19951995.pythonanywhere.com/prof/users-category/',{headers}).then(res => {
+        
+        setTypes(res.data)
+        console.log(res.data)
+       }).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
+
+       await axios.get('https://ahmadshehab19951995.pythonanywhere.com/prof/city-category/',{headers}).then(res => {
+        
+        setCities(res.data)
+        console.log(res.data)
+       }).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+
   const addUser = async () => {
     const headers = {
       "Content-Type": "application/json",
@@ -44,7 +60,11 @@ const Auth = () => {
       .catch((err) =>{ setError(err.response.data[Object.keys(err.response.data)[0]][0]); });
     //await axios.get('http://localhost:3001/products').then(data => console.log(data))
   };
-
+ useEffect(() => {
+    getTypesAndCitys()
+ 
+   
+ }, [])
   return (
     <>
       <div id="container" className="container-fluied cf sign-up">
@@ -95,21 +115,23 @@ const Auth = () => {
     value={usertype}
     onChange={(e) => setUsertype(e.target.value)}
   >
-    <option value="" disabled>Select User Type</option>
-    <option value="worker">Worker</option>
-    <option value="homeowner">Home Owner</option>
-    <option value="company">Company</option>
+    <option value="" disabled>
+    Select a user type
+  </option>
+    {types.map(e => (<>
+    <option value={e.type} >{e.type.toUpperCase()}</option>
+    </>))}
   </select>
   <select 
     value={address}
     onChange={(e) => setAddress(e.target.value)}
   >
-    <option value="" disabled>Select City</option>
-    <option value="Jenin">Jenin</option>
-    <option value="Tulkarm">Tulkarm</option>
-    <option value="Ramallah">Ramallah</option>
-    <option value="Nablus">Nablus</option>
-    <option value="Hebron">Hebron</option>
+    <option value="" disabled>
+    Select your City
+  </option>
+    {cities.map(e => (<>
+    <option value={e.type} >{e.city.toUpperCase()}</option>
+    </>))}
   </select>
 </div>
 

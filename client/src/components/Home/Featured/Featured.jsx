@@ -32,7 +32,7 @@ const Featured = () => {
 		const headers = {
 			'Content-Type': 'application/json'
 		};
-       await axios.get('https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?notAccepted=1',{headers}).then(res => {
+       await axios.get('https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?status=True&is_accepted_isnull=True',{headers}).then(res => {
         
         setData(res.data)
         console.log(res.data)

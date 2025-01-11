@@ -41,7 +41,7 @@ const Profile = () => {
     } else if (localStorage.getItem("user_type") == "homeowner") {
       await axios
         .get(
-          `https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?format=json&user=${decoded.user_id}`,
+          `https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?homeowner=${decoded.user_id}`,
           { headers }
         )
         .then((res) => {

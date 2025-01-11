@@ -32,7 +32,7 @@ export default function BasicMenu() {
   const getcount = async () => {
     if(localStorage.getItem('user_type') == 'homeowner'){
      try {
-      await axios.get(`https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?user=${decoded.user_id}`).then(res => setcount(res.data.length))
+      await axios.get(`https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?homeowner=${decoded.user_id}`).then(res => setcount(res.data.length))
      } catch (error) {
       
      }

@@ -14,12 +14,15 @@ function Home() {
   const [image, setImage] = useState(null);
   const [price, setPrice] = useState("");
   const [error, setError] = useState("");
+  const [category, setCategory] = useState([]);
+  const [PostCategory, setPostCategory] = useState('');
   const createPost = async () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", desc);
     formData.append("image", image);
     formData.append("price", price);
+    formData.append("category", PostCategory);
 
     try {
       const token = JSON.parse(localStorage.getItem("login")).token;
@@ -39,6 +42,16 @@ function Home() {
     }
   };
 
+  const getCategorys = async () => {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    await axios.get(`https://ahmadshehab19951995.pythonanywhere.com/prof/posts-category/`,{headers}).then(res => {
+        
+      setCategory(res.data)
+      console.log(res.data)
+     }).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
+    }
   const sess = async () => {
     const token = JSON.parse(localStorage.getItem("login")).token;
     const decoded = jwt_decode(token);
@@ -57,6 +70,7 @@ function Home() {
   };
 
   useEffect(() => {
+    getCategorys();
     sess();
   }, []);
 
@@ -95,14 +109,19 @@ function Home() {
                     />
                   </div>
                   <div className="form-group col-md-6 mb-3">
-                    <label htmlFor="inputDesc">Price</label>
-                    <input
-                      type="text"
-                      className="form-control mt-1"
-                      id="inputDesc"
-                      placeholder="Price"
-                      onChange={(e) => setPrice(e.target.value)}
-                    />
+                    <label htmlFor="inputDesc">Category</label>
+                    <select 
+    className="form-select"
+    value={PostCategory}
+    onChange={(e) => setPostCategory(e.target.value)}
+    >
+    <option value="" disabled>
+    Select a user type
+  </option>
+    {category.map((e,id) => (<>
+    <option key={id} value={e.id} >{e.category}</option>
+    </>))}
+  </select>
                   </div>
                   <div className="form-group col-md-6 mb-3">
                     <label htmlFor="inputImage">Image</label>
