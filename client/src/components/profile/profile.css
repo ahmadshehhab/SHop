@@ -8,3 +8,19 @@
   height: 250px; 
   object-fit: cover;
 }
+
+.worker-message{
+  background-color: rgb(65, 203, 34);
+  width: 50%;
+  margin: 5px 0px 5px 0px;
+  border-radius: 5px;
+  padding: 1px 5px 1px 5px;
+}
+.user-message{
+  background-color: rgb(167, 214, 254);
+  display: flex;
+  justify-content: end;
+  margin: 5px 0px 5px 0px;
+  border-radius: 5px;
+  padding: 1px 5px 1px 5px;
+}

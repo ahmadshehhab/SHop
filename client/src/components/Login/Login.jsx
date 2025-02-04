@@ -36,15 +36,15 @@ const Login = () => {
       const response = await axios.get(
         `https://ahmadshehab19951995.pythonanywhere.com/prof/users/${(decoded.user_id) }/`
       ).then(res => {
-       
+       console.log(res.data)
         localStorage.setItem("username", res.data.username);
         localStorage.setItem("user_type", res.data.user_type);
-      })
+      }).then(() => navigate('/home')).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
     } catch (error) {
       console.error(error);
     }
 
-	}).then(() => navigate('/home')).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
+	})
 	//await axios.get('http://localhost:3001/products').then(data => console.log(data))
         
     }

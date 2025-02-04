@@ -13,6 +13,7 @@ import Auth from './components/Auth/Auth';
 import Login from './components/Login/Login';
 import Confirm from './components/confirm/Confirm';
 import Profile from './components/profile/Profile.jsx';
+import ConfirmEmail from './components/confirmEmail/ConfirmEmail.jsx';
 
 function Demo() {
     return(
@@ -77,6 +78,11 @@ function Demo() {
 <Route exact path='/home/register/confirm' element={
      <>
      <Confirm/>
+     </>
+} /> 
+<Route exact path='/home/invitation' element={
+     <>
+     <ConfirmEmail/>
      </>
 } /> 
 <Route exact path='/home/login' element={
