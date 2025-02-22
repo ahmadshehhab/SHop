@@ -14,20 +14,19 @@ const AllShop = () => {
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [Home, setHome] = useState();
+  const [Home, setHome] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [CompanyData, setCompanyData] = useState(null);
   let homeowner = null
   const token = JSON.parse(localStorage.getItem("login")).token;
   const decoded = jwt_decode(token);
-  const submitPost =  (id ,ho) => {
+  const submitPost = async (id ,ho) => {
     setSelectedPostId(id);
-    setHome(homeowner)
-    
+    homeowner = ho
+    await setHome(ho.id)
     console.log(decoded.user_id)
     setShowForm(true); 
-    homeowner = ho
   };
   const sendInvitation = async (em , w_id) => {
     const headers = {
@@ -62,7 +61,7 @@ const AllShop = () => {
         
       );
      
-      await axios.post(`https://ahmadshehab19951995.pythonanywhere.com/prof/chats/`,  { participants: [decoded.user_id, Home] } , {headers2}).then(res => console.log(res)).catch(e => console.log(e.response.data))
+      await axios.post(`https://ahmadshehab19951995.pythonanywhere.com/prof/chats/`,  { participants: [decoded.user_id, Home.id] } , {headers2}).then(res => console.log(res)).catch(e => console.log(e.response.data))
       setShowForm(false); 
       setPrice("");
       setDate("");
@@ -122,7 +121,8 @@ const AllShop = () => {
     getCategorys();
     getPosts();
     console.log(data)
-  }, [PostCategory ]);
+    console.log(Home?.id)
+  }, [PostCategory , Home]);
 
   return (
     <>
@@ -151,7 +151,7 @@ const AllShop = () => {
                   <h5 className="card-title">{post.title}</h5>
                   <p className="card-text prof-desc">{post.description}</p>
                
-                  <button className="btn btn-success" onClick={() => {submitPost(post.id); setHome(post.homeowner)} }>
+                  <button className="btn btn-success" onClick={() => {submitPost(post.id, post.homeowner); setHome(post.homeowner)} }>
                     Submit
                   </button>
                  

@@ -27,7 +27,7 @@ const Login = () => {
        await axios.post('https://ahmadshehab19951995.pythonanywhere.com/prof/api/login/', {
 				username:username,
 			password:password
-	},{headers}).then(async res => {
+	},{headers}).catch(err => setError(err.response.data[Object.keys(err.response.data)[0]][0]|| 'error')).then(async res => {
 		localStorage.setItem('login',JSON.stringify({login:true,token:res.data.access}))
 		const token = JSON.parse(localStorage.getItem("login")).token;
     const decoded = jwt_decode(token);
@@ -39,7 +39,7 @@ const Login = () => {
        console.log(res.data)
         localStorage.setItem("username", res.data.username);
         localStorage.setItem("user_type", res.data.user_type);
-      }).then(() => navigate('/home')).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]); console.log(err.response.data)})
+      }).then(() => navigate('/home')).catch(err => {setError(err.response.data[Object.keys(err.response.data)[0]][0]|| 'error'); console.log(err.response.data)})
     } catch (error) {
       console.error(error);
     }

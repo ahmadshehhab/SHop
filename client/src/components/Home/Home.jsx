@@ -26,7 +26,7 @@ function Home() {
     formData.append("description", desc);
     formData.append("image", image);
     formData.append("price", price);
-    formData.append("category", +PostCategory);
+    formData.append("category", PostCategory);
     console.log(PostCategory)
     try {
       const token = JSON.parse(localStorage.getItem("login")).token;
@@ -76,6 +76,7 @@ function Home() {
   useEffect(() => {
     getCategorys();
     sess();
+    
   }, []);
 
   return (
@@ -123,7 +124,7 @@ function Home() {
                     <select 
     className="form-select"
     value={PostCategory}
-    onChange={(e) => setPostCategory(e.target.value)}
+    onChange={(e) => {setPostCategory(e.target.value);}}
     >
     <option value="" disabled>
     Select a user type

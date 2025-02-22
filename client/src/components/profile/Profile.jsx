@@ -421,7 +421,8 @@ const Profile = () => {
       );
   
       console.log("Message sent successfully");
-      setNewMessage("");  // Fetch updated messages after sending
+      setNewMessage("");
+      console.log(Home)  // Fetch updated messages after sending
       getUserDetailsAndFetchMessages(Home,Home)
   };
   const updateLocation = async () => {
@@ -487,6 +488,15 @@ const Profile = () => {
     
         return () => clearInterval(interval); 
       }
+    }
+    if(localStorage.getItem('user_type') == "homeowner"){
+      console.log(workerId)
+        const interval = setInterval(() => {
+          getUserDetailsAndFetchMessages(workerId , workerId);
+        }, 3000);
+    
+        return () => clearInterval(interval); 
+      
     }
     
    
@@ -738,7 +748,7 @@ const Profile = () => {
                     </div>
                     {(e.is_accepted && localStorage.getItem("user_type") == "homeowner") && (
                       <button
-                        onClick={() => {getUserDetailsAndFetchMessages(e.is_accepted , e.is_accepted);setHome(e.homeowner)}}
+                        onClick={() => {setworkerId(e.is_accepted);getUserDetailsAndFetchMessages(e.is_accepted , e.is_accepted);setHome(e.homeowner?.id); }}
                         className="btn btn-info"
                       >
                         Contact with Worker
@@ -747,10 +757,11 @@ const Profile = () => {
                     )} 
                     {(e.is_accepted && localStorage.getItem("user_type") == "worker") &&  (<>
                      <button
-                        onClick={() => {getUserDetailsAndFetchMessages(e.homeowner, e.homeowner); setHome(e.homeowner)}}
+
+                        onClick={() => {setgetMessages(true);getUserDetailsAndFetchMessages(e.homeowner?.id, e.homeowner?.id); setHome(e.homeowner?.id);}}
                         className="btn btn-info"
                       >
-                        Contact with HomeOwner
+                        Contact with HomeOwner {e?.homeowner.id}
                       </button>
                       
                     </>)}
@@ -886,7 +897,7 @@ const Profile = () => {
                     <p>Price: {e.price}</p>
                     {(e.is_accepted && localStorage.getItem("user_type") == "homeowner") && (
                       <button
-                        onClick={() => getUserDetailsAndFetchMessages(e.is_accepted)}
+                        onClick={() => {getUserDetailsAndFetchMessages(e.is_accepted);setgetMessages(true)}}
                         className="btn btn-info"
                       >
                         Contact with Worker

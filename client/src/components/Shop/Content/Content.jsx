@@ -208,8 +208,10 @@ const Content = () => {
                               className="btn btn-success btn-lg"
                               name="submit"
                               value="buy"
+                              onClick={() => window.open(`mailto:${data.homeowner?.email}?subject=Email From Professionals &body=Hello`, '_blank')}
+
                             >
-                              Chat On Whatsapp
+                              Send Email 
                             </button>
                           </div>
                           {localStorage.getItem("user_type") == "worker" && (

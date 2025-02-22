@@ -115,6 +115,7 @@ const Auth = () => {
   <select 
     value={usertype}
     onChange={(e) => setUsertype(e.target.value)}
+    className="btn btn-light"
   >
     <option value="" disabled>
     Select a user type
@@ -126,12 +127,13 @@ const Auth = () => {
   <select 
     value={address}
     onChange={(e) => setAddress(e.target.value)}
+    className="btn btn-light"
   >
     <option value="" disabled>
     Select your City
   </option>
     {cities.map(e => (<>
-    <option value={e.type} >{e.city.toUpperCase()}</option>
+    <option value={e.type} >{e.city}</option>
     </>))}
   </select>
 </div>
