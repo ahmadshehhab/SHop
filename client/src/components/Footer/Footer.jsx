@@ -1,27 +1,29 @@
 import React from 'react'
 import './Footer.css'
+import { useTranslation } from "react-i18next";
 const Footer = () => {
+    const { t, i18n } = useTranslation();
   return (
     <>
-      <footer className="bg-darke" id="tempaltemo_footer" >
+      <footer className="bg-darke text-light" id="tempaltemo_footer" >
         <div className="container-sm">
             <div className="row">
 
                 <div className="col-md-4 pt-5">
-                    <h2 className="h2 text-success border-bottom pb-3 border-light logo">Professionals
+                    <h2 className="h2 text-success border-bottom pb-3 border-light logo">{t('professionals')}
                     </h2>
                     <ul className="list-unstyled text-light footer-link-list">
                         <li>
                             <i className="fa fa-map-marker fa-fw"></i>
-                             Hiafa Street, Jenin, Palestine
+                            {t('address')}
                         </li>
                         <li>
                             <i className="fa fa-phone fa-fw"></i>
-                            <a className="text-decoration-none" href="tel:970-592-753-581"> +970 592 753 581</a>
+                            <a className="text-decoration-none text-light" href="tel:970-592-753-581"> +970 592 753 581</a>
                         </li>
                         <li>
                             <i className="fa fa-envelope fa-fw"></i>
-                            <a className="text-decoration-none" href="mailto:ahmadshehab11177@gmail.com"> ahmadshehab11177@gmail.com</a>
+                            <a className="text-decoration-none text-light" href="mailto:ahmadshehab11177@gmail.com"> ahmadshehab11177@gmail.com</a>
                         </li>
                     </ul>
                 </div>

@@ -5,8 +5,12 @@ import axios from "axios";
 import Category from "./Category/Category";
 import Featured from "./Featured/Featured";
 import jwt_decode from "jwt-decode";
-
+import { useTranslation } from "react-i18next";
 function Home() {
+  const { t, i18n } = useTranslation();
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
   const [Username, setUsername] = useState("");
   const [user_type, setUser_type] = useState("");
   const [title, setTitle] = useState("");
@@ -22,8 +26,8 @@ function Home() {
     formData.append("description", desc);
     formData.append("image", image);
     formData.append("price", price);
-    formData.append("category", PostCategory);
-
+    formData.append("category", +PostCategory);
+    console.log(PostCategory)
     try {
       const token = JSON.parse(localStorage.getItem("login")).token;
       const response = await axios.post(
@@ -76,6 +80,10 @@ function Home() {
 
   return (
     <>
+      <div>
+      <button onClick={() => changeLanguage("en")} className="btn border-end rounded-0">English</button>
+      <button onClick={() => changeLanguage("ar")} className="btn border-end rounded-0">العربية</button>
+    </div>
       <Carouserl />
 
       {localStorage.getItem("user_type") === "homeowner" && (
@@ -84,12 +92,14 @@ function Home() {
                 <h1 className="h1">Create New Post</h1>
                 
             </div>
+
           <div className="container-sm py-5">
             <div className="row py-5">
-              <div className="col-md-9 m-auto">
+              <div className="col-md-9 m-auto  ">
                 <div className="row">
-                  <div className="form-group col-md-6 mb-3">
-                    <label htmlFor="inputTitle">Title</label>
+                  <div className="form-group col-md-6 mb-3 ">
+                 
+                    <label htmlFor="inputTitle ">Title</label>
                     <input
                       type="text"
                       className="form-control mt-1"
@@ -98,8 +108,8 @@ function Home() {
                       onChange={(e) => setTitle(e.target.value)}
                     />
                   </div>
-                  <div className="form-group col-md-6 mb-3">
-                    <label htmlFor="inputDesc">Description</label>
+                  <div className="form-group col-md-6 mb-3 border-start">
+                    <label htmlFor="inputDesc ">Description</label>
                     <input
                       type="text"
                       className="form-control mt-1"
@@ -108,7 +118,7 @@ function Home() {
                       onChange={(e) => setDesc(e.target.value)}
                     />
                   </div>
-                  <div className="form-group col-md-6 mb-3">
+                  <div className="form-group col-md-6 mb-3 ">
                     <label htmlFor="inputDesc">Category</label>
                     <select 
     className="form-select"
@@ -123,7 +133,7 @@ function Home() {
     </>))}
   </select>
                   </div>
-                  <div className="form-group col-md-6 mb-3">
+                  <div className="form-group col-md-6 mb-3 border-start">
                     <label htmlFor="inputImage">Image</label>
                     <input
                       type="file"

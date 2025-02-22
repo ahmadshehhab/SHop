@@ -4,6 +4,7 @@ import axios from "axios";
 import profile from "../../assets/img/profile.jpg";
 import "./AllShop.css";
 import jwt_decode from "jwt-decode";
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardTitle, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn } from 'mdb-react-ui-kit';
 const AllShop = () => {
   const [error, setError] = useState("");
   const [data, setData] = useState([]);
@@ -94,6 +95,8 @@ const AllShop = () => {
         setData(data);
       }else if(localStorage.getItem("user_type") === "company"){
         setData(data.filter(e => e.companyId == null))
+      }else{
+        setData(data)
       }
     } catch (err) {
       const errorMessage = err.response?.data
@@ -123,20 +126,26 @@ const AllShop = () => {
 
   return (
     <>
+  
       {worker && (
-        <select className="form-select mt-3 ms-2 selectShop" value={PostCategory} onChange={(e) => setPostCategory(e.target.value)}>
+        <select className="form-select mt-5 ms-5 selectShop" value={PostCategory} onChange={(e) => setPostCategory(e.target.value)}>
           <option value="" disabled>Select a category</option>
           {category.map((e) => (
             <option value={e.id} key={e.id}>{e.category}</option>
           ))}
         </select>
       )}
-
+      <div className="container bg-light text-dark">
       <div className="row">
-        {worker ? (
+        {localStorage.getItem("user_type") == "worker" ? (
           data.map((post) => (
-            <div key={post.id} className="col-12 col-md-3 mb-4 mt-5">
-              <div className="card h-100">
+            <div key={post.id} className="col-12 col-md-3 mb-4 mt-5 ">
+              
+              <div className="card h-100 position-relative z-1">
+              {post.category.category == "اعمال الموسم" && (<>
+                <span className="position-absolute top-5 sesonal z-5 translate-middle badge rounded-pill bg-light text-success">{'seasonal ' }</span>
+       
+              </>)}
                 <img src={post.image} className="card-img-top prof-post-image" alt={post.title} />
                 <div className="card-body">
                   <h5 className="card-title">{post.title}</h5>
@@ -157,7 +166,9 @@ const AllShop = () => {
           ))
         ) : (
           data.map((worker) => (
-            <div key={worker.id} className="col-12 col-md-2 p-5 mt-3 d-flex flex-column">
+            <>
+            
+         {/*    <div key={worker.id} className="col-12 col-md-2 p-5 mt-3 d-flex flex-column">
               <img src={profile} className="rounded-circle img-fluid worker-image" alt="Worker Profile" />
               <h5 className="text-center mt-3">{worker.username}</h5>
               <div className=" d-flex justify-content-around">
@@ -171,11 +182,55 @@ const AllShop = () => {
               </button>
               {localStorage.getItem('user_type') === "company" && (<><button onClick={() => sendInvitation(worker.email, worker.id)} className="btn btn-primary m-1">+</button></>)}
               </div>
-            </div>
+            </div> */}
+
+            <MDBCol md="9" lg="7" xl="5" className="mt-5 ms-5 mb-5">
+            <MDBCard style={{ borderRadius: '15px' }}>
+              <MDBCardBody className="p-4">
+                <div className="d-flex text-black">
+                  <div className="flex-shrink-0">
+                    <MDBCardImage
+                      style={{ width: '180px', borderRadius: '10px' }}
+                      src={worker?.images?.filter(e => e.profile == true).slice(-1)[0]?.img ||'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp' }
+                      alt='Generic placeholder image'
+                      fluid />
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <MDBCardTitle>{worker.username}</MDBCardTitle>
+                    <MDBCardText>{worker.workAs}</MDBCardText>
+                    
+                    <div className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                      style={{ backgroundColor: '#efefef' }}>
+                      <div>
+                        <p className="small text-muted mb-1">Done Jobs</p>
+                        <p className="mb-0">{worker.total_ratings}</p>
+                      </div>
+                      <div className="px-3">
+                        <p className="small text-muted mb-1">City</p>
+                        <p className="mb-0">{worker.address}</p>
+                      </div>
+                      <div>
+                        <p className="small text-muted mb-1">Rating</p>
+                        <p className="mb-0">{worker.rating}</p>
+                      </div>
+                    </div>
+                    <div className="d-flex pt-1">
+                      <a className="btn btn-outline-primary me-1 flex-grow-1" href={`https://wa.me/${worker.phone || ""}`}>Chat</a>
+                      <Link to={`/home/worker/${worker.id}`} className="flex-grow-1">
+                      <button className="btn btn-primary p-2" >More Details</button>
+                      </Link>
+                      {localStorage.getItem('user_type') === "company" && (<><button onClick={() => sendInvitation(worker.email, worker.id)} className="btn btn-primary m-1">+</button></>)}
+                    </div>
+                  </div>
+                </div>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+            </>
           ))
         )}
       </div>
-
+      </div>
      
       {showForm && (
         <div className="overlay" onClick={() => setShowForm(false)}>
@@ -223,6 +278,8 @@ const AllShop = () => {
       )}
 
       {error && <p className="text-danger">{error}</p>}
+
+         
     </>
   );
 };

@@ -4,7 +4,10 @@
 .selectShop{
   width: 25%!important;
 }
-
+.sesonal{
+  right:0!important;
+  font-size: 18px!important;
+}
 .overlay {
   position: fixed;
   top: 0;

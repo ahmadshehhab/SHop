@@ -7,6 +7,8 @@ import Select from "react-select";
 import "./profile.css";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement ,ArcElement, PointElement, LineElement,Title, Tooltip, Legend } from "chart.js";
 import { Bar , Line, Doughnut } from "react-chartjs-2";
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardTitle, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn } from 'mdb-react-ui-kit';
+import { useRef } from "react";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,6 +30,7 @@ const Profile = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [options, setOptions] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const { id } = useParams();
   const token = JSON.parse(localStorage.getItem("login")).token;
   const decoded = jwt_decode(token);
@@ -42,6 +45,41 @@ const Profile = () => {
   const [ActiveWorker, setActiveWorker] = useState(null);
   const [getMessages, setgetMessages] = useState(false);
   const [workerId, setworkerId] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const fileInputRef = useRef(null);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+      setProfileImage(file);
+      console.log("Selected file:", file);
+      uploadImage(file);
+    }
+  };
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("user", decoded.user_id);
+    formData.append("img", file);
+    formData.append("profile", "true"); // Sending profile as true
+
+    try {
+      const response = await axios.post(
+        "https://ahmadshehab19951995.pythonanywhere.com/prof/images/",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Image uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
   console.log(CompanyUsers)
   const chartDataLine = {
     labels:  CompanyUsers?.map((user) => user.total_ratings ) ,
@@ -174,9 +212,11 @@ const Profile = () => {
         `https://ahmadshehab19951995.pythonanywhere.com/prof/posts-category/`,
         { headers }
       );
+      console.log(response.data)
       const optionsInfo = response.data.map((c) => ({
         value: c.category,
         label: c.category,
+        id:c.id
       }));
       setOptions(optionsInfo);
     } catch (err) {
@@ -186,7 +226,28 @@ const Profile = () => {
       );
     }
   };
-
+  const saveInterest = async () => {
+    const formData1 = {
+      user_id: decoded.user_id,
+      category_ids: [+selectedCategory  ] // Pass the interests as an array
+    };
+    
+    await axios
+      .post(
+        `https://ahmadshehab19951995.pythonanywhere.com/prof/users/update-interests/`,
+        formData1,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(res => console.log(res))
+      .catch(err => console.error("Error updating interests:", err));
+  };
+  
+  
   const getPosts = async () => {
     try {
       const headers = {
@@ -195,7 +256,7 @@ const Profile = () => {
       if (localStorage.getItem("user_type") === "worker") {
         setWorker(true);
         const response = await axios.get(
-          `https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?accepted=${decoded.user_id}`,
+          `https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?is_accepted=${decoded.user_id}&status=active`,
           { headers }
         );
         setData(response.data);
@@ -219,6 +280,13 @@ const Profile = () => {
         "Content-Type": "application/json",
       };
       if (localStorage.getItem("user_type") === "homeowner") {
+        const response = await axios.get(
+          `https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?homeowner=${decoded.user_id}&status=done`,
+          { headers }
+        ).then(res => setDonePosts(res.data));
+        
+      }
+      if (localStorage.getItem("user_type") === "worker") {
         const response = await axios.get(
           `https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?homeowner=${decoded.user_id}&status=done`,
           { headers }
@@ -286,6 +354,7 @@ const Profile = () => {
       );
   
       setUserDetails((prev) => ({ ...prev, [userId]: userResponse.data }));
+      console.log(userDetails)
       setSelectedWorker(userResponse.data);
   
       // Fetch chats to find the matching chat
@@ -323,6 +392,7 @@ const Profile = () => {
         );
   
         setChatMessages(messagesResponse.data.messages);
+        console.log(chatMessages)
         console.log("Messages:", messagesResponse.data.messages);
       } else {
         console.error("No matching chat found for the participants.");
@@ -335,9 +405,9 @@ const Profile = () => {
   
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
-  
-   
-  
+
+
+
       // Send the message to the correct chat ID
       await axios.post(
         `https://ahmadshehab19951995.pythonanywhere.com/prof/messages/`, // Replace with your endpoint for sending messages
@@ -354,13 +424,50 @@ const Profile = () => {
       setNewMessage("");  // Fetch updated messages after sending
       getUserDetailsAndFetchMessages(Home,Home)
   };
+  const updateLocation = async () => {
+    if (!navigator.geolocation) {
+      console.error("Geolocation is not supported by this browser.");
+      return;
+    }
   
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const formData1 = {
+          longitude:await position.coords.longitude,
+          latitude:await  position.coords.latitude,
+        };
+        try {
+          navigator.geolocation.getCurrentPosition(async (p) => console.log(p))
+          const response = await axios.patch(
+            `https://ahmadshehab19951995.pythonanywhere.com/prof/users/${decoded.user_id}/`,
+            formData1,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log("Location updated successfully:", response.data);
+        } catch (err) {
+          console.error("Error updating location:", err);
+        }
+      },
+      (error) => {
+        console.error("Error getting location:", error.message);
+      }
+    );
+  };
+  
+
 
   useEffect(() => {
     getPosts();
     getCategorys();
+    saveInterest()
     getDonePosts()
     getCompanyUsers()
+    console.log(+selectedCategory + 10)
     if(localStorage.getItem('user_type') == "worker"){
 
       getActiveWorker()
@@ -384,24 +491,63 @@ const Profile = () => {
     
    
     
-  }, [Showrating , getMessages]);
+  }, [Showrating , getMessages , selectedCategory]);
 
   return (
     <>
+
+    <div className="d-flex align-content-center w-50">
+  <button className="btn btn-light border-success ms-5 mt-5" onClick={() => updateLocation()}><i class="fas fa-map-marker-alt"></i> </button>
   {localStorage.getItem('user_type') == "worker" && ActiveWorker?.companyId != null && (<>
   
-  <button className="btn btn-light border-success ms-5 mt-5" onClick={() => {
+  <button className="btn btn-light border-success ms-3 mt-5" onClick={() => {
     getUserDetailsAndFetchMessages(ActiveWorker?.companyId.id,ActiveWorker?.companyId.id)
     setgetMessages(true)
   }} >Company Messages</button>
   
+  
+      
   </>) }
+  {localStorage.getItem('user_type') == "worker" && (<>
+    <select
+        value={selectedCategory}
+        className="btn btn-light border-warning ms-3 mt-5 bg-light"
+        onChange={(e) => {setSelectedCategory(e.target.value)}}
+      >
+        <option value="">Select a category</option>
+        {options.map((option, index) => (
+          <option key={index} value={option.id}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+
+      <div className="mt-5 ms-3 ">
+      <button 
+        
+        className="btn border-danger w-100"
+        onClick={handleClick}
+  
+      >
+        Profile Picture
+      </button>
+      <input 
+        type="file" 
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: "none" }} 
+      />
+                  </div>
+  </>)}
+  </div>
+
+  
 {localStorage.getItem('user_type') == "company" && selectedWorker && (
         <div className="overlay">
           <div className="worker-info-box bg-light p-1">
             <button
               className="close-btn btn btn-danger"
-              onClick={() =>{ setSelectedWorker(null);setgetMessages(false)}}
+              onClick={() =>{ setSelectedWorker(null);setgetMessages(false); setChatMessages([])}}
             >
               &times;
             </button>
@@ -570,6 +716,8 @@ const Profile = () => {
           </div>
           <div className="row">
             {data.map((e) => (
+            <>
+              {console.log(e)}
               <div className="col-12 col-md-4 mb-4" key={e.id}>
                 <div className="card h-100">
                   <Link to={`/home/details/${e.id}`}>
@@ -583,6 +731,11 @@ const Profile = () => {
                     <h5>{e.title}</h5>
                     <p className="card-text prof-desc">{e.description}</p>
                     <p>Price: {e.price}</p>
+                    <div className="d-flex justify-content-between">
+                      
+                    <p className="text-success">Date: {e.post_date}</p>
+                    <p className="text-success">Time: {e.post_time?.slice(0,5)}</p>
+                    </div>
                     {(e.is_accepted && localStorage.getItem("user_type") == "homeowner") && (
                       <button
                         onClick={() => {getUserDetailsAndFetchMessages(e.is_accepted , e.is_accepted);setHome(e.homeowner)}}
@@ -590,6 +743,7 @@ const Profile = () => {
                       >
                         Contact with Worker
                       </button>
+                      
                     )} 
                     {(e.is_accepted && localStorage.getItem("user_type") == "worker") &&  (<>
                      <button
@@ -598,6 +752,7 @@ const Profile = () => {
                       >
                         Contact with HomeOwner
                       </button>
+                      
                     </>)}
                     {localStorage.getItem("user_type") ==
                                 "homeowner" && (
@@ -617,10 +772,14 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
+              </>
             ))}
           </div>
 
             {localStorage.getItem('user_type') == "company" && (<>
+
+           
+
             <section className="container-sm py-5">
                     <div className="row text-center pt-3">
                       <div className="col-lg-6 m-auto">
@@ -632,7 +791,51 @@ const Profile = () => {
                     <div className="row">
                       {CompanyUsers?.length > 0 ? (
                         CompanyUsers.map((worker, index) => (
-                          <div key={index} className="col-12 col-md-4 p-5 mt-3">
+                          <>
+   <MDBCol md="9" lg="7" xl="5" className="mt-5 ms-5 mb-5">
+            <MDBCard style={{ borderRadius: '15px' }}>
+              <MDBCardBody className="p-4">
+                <div className="d-flex text-black">
+                  <div className="flex-shrink-0">
+                    <MDBCardImage
+                      style={{ width: '180px', borderRadius: '10px' }}
+                      src={worker?.images?.filter(e => e.profile == true).slice(-1)[0]?.img ||'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp' }
+                      alt='Generic placeholder image'
+                      fluid />
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <MDBCardTitle>{worker.users[index].user.username}</MDBCardTitle>
+                    <MDBCardText>{worker.workAs}</MDBCardText>
+                    
+                    <div className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                      style={{ backgroundColor: '#efefef' }}>
+                      <div>
+                        <p className="small text-muted mb-1">Done Jobs</p>
+                        <p className="mb-0">{worker.total_ratings}</p>
+                      </div>
+                      <div className="px-3">
+                        <p className="small text-muted mb-1">City</p>
+                        <p className="mb-0">{worker.address}</p>
+                      </div>
+                      <div>
+                        <p className="small text-muted mb-1">Rating</p>
+                        <p className="mb-0">{worker.rating}</p>
+                      </div>
+                    </div>
+                    <div className="d-flex pt-1">
+                      <a className="btn btn-outline-primary me-1 flex-grow-1" onClick={() => {getUserDetailsAndFetchMessages(worker.id , worker.id);setgetMessages(true);setworkerId(worker.id)}}>Chat</a>
+                      <Link to={`/home/worker/${worker.id}`} className="flex-grow-1">
+                      <button className="btn btn-primary p-2" >More Details</button>
+                      </Link>
+                     
+                    </div>
+                  </div>
+                </div>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+
+                        {/*   <div key={index} className="col-12 col-md-4 p-5 mt-3">
                             <a href="#">
                               <img src={profile} className="rounded-circle img-fluid" alt="Worker Profile" />
                             </a>
@@ -647,7 +850,8 @@ const Profile = () => {
                                 Send Message
                               </a>
                             </p>
-                          </div>
+                          </div> */}
+                      </>
                         ))
                       ) : (
                         <div className="col-12 text-center">
@@ -662,7 +866,7 @@ const Profile = () => {
 
         </div>
       </section>
-      {localStorage.getItem('user_type') == "homeowner" & DonePosts != [] && (<>
+      {localStorage.getItem('user_type') == "homeowner" || localStorage.getItem('user_type') == "worker" & DonePosts != [] && (<>
       <section className="bg-light ms-5">
       <h2 className="ms-4 h-25">Done Posts</h2>
       <div className="row ms-3">

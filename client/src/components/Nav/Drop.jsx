@@ -36,6 +36,12 @@ export default function BasicMenu() {
      } catch (error) {
       
      }
+    } else if(localStorage.getItem('user_type') == 'worker'){
+      try {
+        await axios.get(`https://ahmadshehab19951995.pythonanywhere.com/prof/jobposts/?is_accepted=${decoded.user_id}&status=active`).then(res => setcount(res.data.length))
+       } catch (error) {
+        
+       }
     }
   }
    useEffect(() => {

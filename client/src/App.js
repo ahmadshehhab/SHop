@@ -1,6 +1,6 @@
 
 import './App.css';
-
+import "./i18n";
 import Demo from './Demo';
 function App() {
   return (

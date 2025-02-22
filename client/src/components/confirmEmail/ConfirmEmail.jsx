@@ -32,13 +32,15 @@ const ConfirmEmail = () => {
            
           },
           { headers }
-        )
+        ).catch(e =>console.log(e))
+        
         await axios.post(`https://ahmadshehab19951995.pythonanywhere.com/prof/chats/`,  { participants: [companyId, w_id] } , {headers}).catch(e => console.log(e))
-        .then(res => console.log(res))
+        .then(res => console.log(res)).then(navigate('/home/'))
         .catch((err) => {
           setError(err);
           console.log(err)
         });
+        console.log(error)
       //await axios.get('http://localhost:3001/products').then(data => console.log(data))
     };
 
@@ -66,10 +68,10 @@ const ConfirmEmail = () => {
     className='btn btn-group'
   >
     <option value="" disabled>
-    Select a user type
+    Select
   </option>
     {actionsList?.map(e => (<>
-    <option value={e.type} >{e.toUpperCase()}</option>
+    <option value={e} >{e.toUpperCase()}</option>
     </>))}
   </select>
                     </div>
@@ -81,12 +83,7 @@ const ConfirmEmail = () => {
                     <div className="text-danger">
   {error}
 </div>
-                    <p>
-                      <span className="text-dark">Already have an account?</span>
-                      <b /* onclick="toggle()" */ className="pointer text-dark">
-                        <Link to="/home/login">Sign in here</Link>
-                      </b>
-                    </p>
+                    
                   </div>
                 </div>
               </div>

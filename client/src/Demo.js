@@ -14,14 +14,16 @@ import Login from './components/Login/Login';
 import Confirm from './components/confirm/Confirm';
 import Profile from './components/profile/Profile.jsx';
 import ConfirmEmail from './components/confirmEmail/ConfirmEmail.jsx';
+import WorkerProfile from './components/workerProfile/WorkerProfile.jsx';
 
 function Demo() {
     return(
     <>
-    <TopNav/>
+    
    <Routes>
    <Route exact path='/' element={
      <>
+     <TopNav/>
      <Nav/>
      <Home/>
      <Footer/>
@@ -29,6 +31,7 @@ function Demo() {
    } />  
    <Route exact path='/home' element={
      <>
+     <TopNav/>
      <Nav/>
      <Home/>
      <Footer/>
@@ -37,6 +40,7 @@ function Demo() {
  
    <Route path='/home/about' element={
      <>
+     <TopNav/>
      <Nav/>
      <About/>
      <Footer/>
@@ -44,6 +48,7 @@ function Demo() {
 } /> 
 <Route path='/home/workers-post' element={
      <>
+     <TopNav/>
      <Nav/>
      <AllShop/>
      <Footer/>
@@ -51,13 +56,23 @@ function Demo() {
 } /> 
 <Route path='/home/details/:id' element={
      <>
+     <TopNav/>
      <Nav/>
      <Shop/>
      <Footer/>
      </>
 } /> 
+<Route path='/home/worker/:id' element={
+     <>
+     <TopNav/>
+     <Nav/>
+     <WorkerProfile/>
+     <Footer/>
+     </>
+} /> 
 <Route path='/home/profile' element={
      <>
+     <TopNav/>
      <Nav/>
      <Profile/>
      <Footer/>
@@ -65,6 +80,7 @@ function Demo() {
 } /> 
 <Route path='/home/contact' element={
      <>
+     <TopNav/>
      <Nav/>
      <Contact/>
      <Footer/>

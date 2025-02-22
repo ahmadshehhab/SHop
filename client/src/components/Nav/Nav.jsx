@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import './Nav.css'
+import { useTranslation } from "react-i18next";
 import Drop from './Drop'
 const Nav = () => {
+      const { t, i18n } = useTranslation();
   return (
     <>
         <nav className="navbar navbar-expand-lg navbar-light shadow">
@@ -20,16 +22,16 @@ const Nav = () => {
                 <div className="flex-fill">
                     <ul className="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/home">Home</Link>
+                            <Link className="nav-link" to="/home">{t("home")}</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/home/about">About</Link>
+                            <Link className="nav-link" to="/home/about">{t("about")}</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/home/workers-post">{localStorage.getItem("user_type") == "worker" ? "Posts" : "workers"}</Link>
+                            <Link className="nav-link" to="/home/workers-post">{localStorage.getItem("user_type") == "worker" ? t("posts") : t("workers")}</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/home/contact">Contact</Link>
+                            <Link className="nav-link" to="/home/contact">{t("contact")}</Link>
                         </li>
                     </ul>
                 </div>

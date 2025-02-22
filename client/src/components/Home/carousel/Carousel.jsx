@@ -4,7 +4,9 @@ import banner2 from '../../../assets/img/banner_img_02.jpg'
 import banner3 from '../../../assets/img/banner_img_03.jpg'
 import alaw from '../../../assets/img/alaw.svg'
 import './Carousel.css'
+import { useTranslation } from "react-i18next";
 const Carouserl = () => {
+    const { t, i18n } = useTranslation();
   return (
     <>
     <div id="template-mo-zay-hero-carousel" className="carousel slide" data-bs-ride="carousel">
@@ -18,13 +20,11 @@ const Carouserl = () => {
                         </div>
                         <div className="col-lg-6 mb-0 d-flex align-items-center">
                             <div className="text-align-left align-self-center">
-                                <h1 className="h1 text-success"><b>Professionals
+                                <h1 className="h1 text-success"><b>{t('professionals')}
                                 </b> </h1>
-                                <h3 className="h2">هل تبحث عن شخص  لمساعدتك</h3>
+                                <h3 className="h2">{t('looking_for_help')}</h3>
                                 <p>
-                                
-                                بامكانك من خلال هذا الموقع البحث عن عمل من خلال التقديم على المشاريع المعروضة,
-او بامكانك عرض مشكلة لديك ليقوم احد الخبراء بمساعدتك
+                                {t('description')}
                                 </p>
                             </div>
                         </div>

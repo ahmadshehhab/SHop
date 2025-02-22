@@ -11,6 +11,7 @@ const Auth = () => {
   const [company, setCompany] = useState("false");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
+  const [error2, setError2] = useState("");
   const [address, setAddress] = useState("");
   const [types, setTypes] = useState([])
   const [cities, setCities] = useState([])
@@ -57,7 +58,7 @@ const Auth = () => {
         { headers }
       )
       .then(() => navigate("/home/register/confirm" , {state:{email:email}}))
-      .catch((err) =>{ setError(err.response.data[Object.keys(err.response.data)[0]][0]); });
+      .catch((err) =>{ setError(err.response.data[Object.keys(err.response.data)[0]][0]); setError2(err.response.data[Object.keys(err.response.data)[0]])});
     //await axios.get('http://localhost:3001/products').then(data => console.log(data))
   };
  useEffect(() => {
@@ -147,7 +148,8 @@ const Auth = () => {
 
                 <button onClick={addUser}>Sign up</button>
                 <div className="text-danger">
-  {error }
+  {error}
+  {error2}
 </div>
 
                 <p>
